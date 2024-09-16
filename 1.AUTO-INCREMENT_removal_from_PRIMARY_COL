@@ -1,0 +1,56 @@
+=> If the ONE column is AUTO_INCREMENTED having PRIMARY KEY and you have to make it NON AUTO_INCREMENTED
+
+--------------------------------------------------------------------------------------------------------
+=> STEPS 
+
+-> creates a new column with non autoincrement 
+-> copy data from old_col to new_col
+-> remove the primary key constraints
+-> drop the original column, old_col
+-> rename new_col to old_col
+-> re applying the primary key constraint to new_col
+--------------------------------------------------------------------------------------------------------
+
+use Test_Report ;
+CREATE TABLE a_students (
+    id INT PRIMARY KEY IDENTITY(1,1),  -- Auto-incrementing ID column
+    firstname VARCHAR(50) NOT NULL,    -- First name column
+    lastname VARCHAR(50) NOT NULL,     -- Last name column
+    age INT NOT NULL,                  -- Age column
+    gender VARCHAR(10),                -- Gender column
+    address VARCHAR(255),              -- Address column
+    mobile_no VARCHAR(15)              -- Mobile number column
+);
+
+INSERT INTO a_students(id, firstname, lastname, age, gender, address, mobile_no)
+VALUES 
+('66','Johnnn', 'Doe', 30, 'Male', '123 Main St, City', '1234567890'),
+('72','Janeee', 'Smith', 25, 'Female', '456 Oak Ave, Town', '9876543210'),
+('88','Sammm', 'Wilson', 40, 'Male', '789 Pine Rd, Village', '5556667777');
+
+ALTER TABLE a_students                 -- create a new column new_id 
+ADD new_id INT;
+
+select * from a_students;
+
+UPDATE a_students                      -- copy data from id to new_id
+SET new_id = id;
+
+
+SELECT name                            -- remove the primary key constraints
+FROM sys.key_constraints 
+WHERE parent_object_id = OBJECT_ID('a_students');
+
+ALTER TABLE a_students
+DROP CONSTRAINT PK__a_studen__3213E83F1A8C0776;
+
+
+ALTER TABLE a_students                 -- drop the original id column after removing the primary key constraints
+DROP COLUMN id;
+
+EXEC sp_rename 'a_students.new_id', 'id', 'COLUMN';  --rename new_id to id
+
+select * from a_students ;
+
+ALTER TABLE a_students                 -- re applying the primary key constraints
+ADD PRIMARY KEY (id);
