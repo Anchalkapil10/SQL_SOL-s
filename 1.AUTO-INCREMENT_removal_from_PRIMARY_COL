@@ -54,3 +54,9 @@ select * from a_students ;
 
 ALTER TABLE a_students                 -- re applying the primary key constraints
 ADD PRIMARY KEY (id);
+---------------------------------------------------------------------------------------------------------------------------
+INSERT INTO a_students( firstname, lastname, age, gender, address, mobile_no, id)
+VALUES 
+('Anchal', 'Kapil', 22, 'Male', '143 Main St, City', '9834567890', '4'),
+('Tanya', 'Kardam', 25, 'Female', '400 Oak Ave, Town', '8876543210', '5'),
+('suchi', 'sharma', 40, 'Male', '300 Pine Rd, Village', '7856667777', '6');
